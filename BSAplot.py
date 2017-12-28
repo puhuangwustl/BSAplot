@@ -21,12 +21,9 @@ STEP=2
 YMAX=1.1
 MAXSNP=100000	# max snp allowed, otherwize thin
 MAXFSIZE=10000000
-F_fai='/media/Setaria_1/Share/Sviridis_vphytozome1.1/Sviridis_311_v1.0.fa.fai'
-F_anno='/media/Setaria_1/Share/Sviridis_vphytozome1.1/Sviridis_311_v1.1.annotation_info.txt'
 ColumnOrder=['Pos','Mut/Total','Annotation','Impact','Codon','Allele','Gene','AtLog','AtName','AtAnno','Transcript']
-#F_fai='Sviridis_311_v1.0.fa.fai'
-#F_fai='Sviridis_311_v1.0.fa.fai'
-#F_anno='Sviridis_311_v1.1.annotation_info.txt'
+F_fai='genome/Sviridis_311_v1.0.fa.fai'
+F_anno='genome/Sviridis_311_v1.1.annotation_info.txt'
 
 # genome size dic
 f=open(F_fai)

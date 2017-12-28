@@ -1,0 +1,59 @@
+Pos	Mut/Total	Annotation	Impact	Codon	Allele	Gene	AtLog	AtName	AtAnno	Transcript
+Chr_05:35857636	18/18	missense_variant	2 MODERATE	c.271G>T	p.Asp91Tyr	Sevir.5G322300	AT4G18780.1	ATCESA8,CESA8,IRX1,LEW2	cellulose synthase family protein	Sevir.5G322300.1.v1.1
+Chr_05:39589079	31/31	missense_variant	2 MODERATE	c.49C>T	p.Arg17Trp	Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.2.v1.1
+Chr_05:39589079	31/31	missense_variant	2 MODERATE	c.49C>T	p.Arg17Trp	Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.4.v1.1
+Chr_05:39271367	42/42	synonymous_variant	3 LOW	c.1536C>T	p.Asp512Asp	Sevir.5G371200	AT2G40400.2		Protein of unknown function (DUF399 and DUF3411)	Sevir.5G371200.2.v1.1
+Chr_05:39271367	42/42	synonymous_variant	3 LOW	c.1536C>T	p.Asp512Asp	Sevir.5G371200	AT2G40400.2		Protein of unknown function (DUF399 and DUF3411)	Sevir.5G371200.4.v1.1
+Chr_05:39271367	42/42	synonymous_variant	3 LOW	c.1536C>T	p.Asp512Asp	Sevir.5G371200	AT2G40400.2		Protein of unknown function (DUF399 and DUF3411)	Sevir.5G371200.1.v1.1
+Chr_05:39271367	42/42	synonymous_variant	3 LOW	c.1536C>T	p.Asp512Asp	Sevir.5G371200	AT2G40400.2		Protein of unknown function (DUF399 and DUF3411)	Sevir.5G371200.3.v1.1
+Chr_05:37638909	20/20	upstream_gene_variant	4 MODIFIER	c.-1869A>G		Sevir.5G346800	AT4G21380.1	ARK3,RK3	receptor kinase 3	Sevir.5G346800.1.v1.1
+Chr_05:36783963	45/50	downstream_gene_variant	4 MODIFIER	c.*4090G>A		Sevir.5G335300	AT5G64510.1			Sevir.5G335300.2.v1.1
+Chr_05:37323843	37/37	intron_variant	4 MODIFIER	c.85+79C>T		Sevir.5G342200	AT2G30933.1		Carbohydrate-binding X8 domain superfamily protein	Sevir.5G342200.1.v1.1
+Chr_05:38980467	20/20	upstream_gene_variant	4 MODIFIER	c.-1163C>T		Sevir.5G367600	AT2G40660.1		Nucleic acid-binding, OB-fold-like protein	Sevir.5G367600.1.v1.1
+Chr_05:37819185	14/14	intergenic_region	4 MODIFIER	n.37819185G>A		Sevir.5G349600	AT5G56370.2		F-box/RNI-like/FBD-like domains-containing protein	Sevir.5G349500.v1.1-Sevir.5G349600.v1.1
+Chr_05:38980467	20/20	downstream_gene_variant	4 MODIFIER	c.*2907C>T		Sevir.5G367800	AT3G56370.1		Leucine-rich repeat protein kinase family protein	Sevir.5G367800.1.v1.1
+Chr_05:38980467	20/20	intergenic_region	4 MODIFIER	n.38980467G>A		Sevir.5G367600	AT2G40660.1		Nucleic acid-binding, OB-fold-like protein	Sevir.5G367600.v1.1-Sevir.5G367700.v1.1
+Chr_05:38980467	20/20	intergenic_region	4 MODIFIER	n.38980467G>A		Sevir.5G367700				Sevir.5G367600.v1.1-Sevir.5G367700.v1.1
+Chr_05:39172623	17/18	upstream_gene_variant	4 MODIFIER	c.-5960G>A		Sevir.5G370100	AT2G30340.1	LBD13	LOB domain-containing protein 13	Sevir.5G370100.1.v1.1
+Chr_05:39172623	17/18	downstream_gene_variant	4 MODIFIER	c.*3036G>A		Sevir.5G370000	AT2G40475.1			Sevir.5G370000.1.v1.1
+Chr_05:37819185	14/14	intergenic_region	4 MODIFIER	n.37819185G>A		Sevir.5G349500	AT3G13230.1		RNA-binding KH domain-containing protein	Sevir.5G349500.v1.1-Sevir.5G349600.v1.1
+Chr_05:39172623	17/18	intergenic_region	4 MODIFIER	n.39172623G>A		Sevir.5G370000	AT2G40475.1			Sevir.5G370000.v1.1-Sevir.5G370100.v1.1
+Chr_05:37819185	14/14	upstream_gene_variant	4 MODIFIER	c.-313C>T		Sevir.5G349500	AT3G13230.1		RNA-binding KH domain-containing protein	Sevir.5G349500.1.v1.1
+Chr_05:39172623	17/18	intergenic_region	4 MODIFIER	n.39172623G>A		Sevir.5G370100	AT2G30340.1	LBD13	LOB domain-containing protein 13	Sevir.5G370000.v1.1-Sevir.5G370100.v1.1
+Chr_05:37819185	14/14	upstream_gene_variant	4 MODIFIER	c.-2577C>T		Sevir.5G349400	AT1G69290.1		Pentatricopeptide repeat (PPR) superfamily protein	Sevir.5G349400.1.v1.1
+Chr_05:37323843	37/37	intron_variant	4 MODIFIER	c.85+79C>T		Sevir.5G342200	AT2G30933.1		Carbohydrate-binding X8 domain superfamily protein	Sevir.5G342200.3.v1.1
+Chr_05:37638909	20/20	intergenic_region	4 MODIFIER	n.37638909A>G		Sevir.5G346800	AT4G21380.1	ARK3,RK3	receptor kinase 3	Sevir.5G346700.v1.1-Sevir.5G346800.v1.1
+Chr_05:37323843	37/37	intron_variant	4 MODIFIER	c.0+164C>T		Sevir.5G342200	AT2G30933.1		Carbohydrate-binding X8 domain superfamily protein	Sevir.5G342200.2.v1.1
+Chr_05:37638909	20/20	intergenic_region	4 MODIFIER	n.37638909A>G		Sevir.5G346700	AT4G21380.1	ARK3,RK3	receptor kinase 3	Sevir.5G346700.v1.1-Sevir.5G346800.v1.1
+Chr_05:37323843	37/37	upstream_gene_variant	4 MODIFIER	c.-4885C>T		Sevir.5G342300	AT1G48280.1		hydroxyproline-rich glycoprotein family protein	Sevir.5G342300.2.v1.1
+Chr_05:38980467	20/20	upstream_gene_variant	4 MODIFIER	c.-1925G>A		Sevir.5G367700				Sevir.5G367700.1.v1.1
+Chr_05:36783963	45/50	intron_variant	4 MODIFIER	c.348+91G>A		Sevir.5G335400	AT2G30800.1	ATVT-1,HVT1	helicase in vascular tissue and tapetum	Sevir.5G335400.2.v1.1
+Chr_05:37323843	37/37	upstream_gene_variant	4 MODIFIER	c.-4885C>T		Sevir.5G342300	AT1G48280.1		hydroxyproline-rich glycoprotein family protein	Sevir.5G342300.1.v1.1
+Chr_05:39271367	42/42	downstream_gene_variant	4 MODIFIER	c.*4486C>T		Sevir.5G371300	AT5G07120.1	SNX2b	sorting nexin 2B	Sevir.5G371300.1.v1.1
+Chr_05:37323843	37/37	upstream_gene_variant	4 MODIFIER	c.-2357G>A		Sevir.5G342100	AT2G16430.2	ATPAP10,PAP10	purple acid phosphatase 10	Sevir.5G342100.1.v1.1
+Chr_05:39301682	20/20	downstream_gene_variant	4 MODIFIER	c.*3397G>A		Sevir.5G371900	AT5G58490.1		NAD(P)-binding Rossmann-fold superfamily protein	Sevir.5G371900.1.v1.1
+Chr_05:36930461	33/36	upstream_gene_variant	4 MODIFIER	c.-3187C>T		Sevir.5G337100				Sevir.5G337100.1.v1.1
+Chr_05:39301682	20/20	downstream_gene_variant	4 MODIFIER	c.*3206G>A		Sevir.5G371900	AT5G58490.1		NAD(P)-binding Rossmann-fold superfamily protein	Sevir.5G371900.2.v1.1
+Chr_05:36930461	33/36	3_prime_UTR_variant	4 MODIFIER	c.*244G>A		Sevir.5G337200	AT5G59030.1	COPT1	copper transporter 1	Sevir.5G337200.2.v1.1
+Chr_05:39301682	20/20	downstream_gene_variant	4 MODIFIER	c.*2907G>A		Sevir.5G371900	AT5G58490.1		NAD(P)-binding Rossmann-fold superfamily protein	Sevir.5G371900.3.v1.1
+Chr_05:36930461	33/36	3_prime_UTR_variant	4 MODIFIER	c.*335G>A		Sevir.5G337200	AT5G59030.1	COPT1	copper transporter 1	Sevir.5G337200.1.v1.1
+Chr_05:39301682	20/20	intergenic_region	4 MODIFIER	n.39301682G>A		Sevir.5G371900	AT5G58490.1		NAD(P)-binding Rossmann-fold superfamily protein	Sevir.5G371900.v1.1-Sevir.5G372000.v1.1
+Chr_05:36827345	32/34	intergenic_region	4 MODIFIER	n.36827345T>C		Sevir.5G335800				Sevir.5G335700.v1.1-Sevir.5G335800.v1.1
+Chr_05:39301682	20/20	intergenic_region	4 MODIFIER	n.39301682G>A		Sevir.5G372000	AT5G58490.1		NAD(P)-binding Rossmann-fold superfamily protein	Sevir.5G371900.v1.1-Sevir.5G372000.v1.1
+Chr_05:36827345	32/34	intergenic_region	4 MODIFIER	n.36827345T>C		Sevir.5G335700				Sevir.5G335700.v1.1-Sevir.5G335800.v1.1
+Chr_05:36783963	45/50	intron_variant	4 MODIFIER	c.792+91G>A		Sevir.5G335400	AT2G30800.1	ATVT-1,HVT1	helicase in vascular tissue and tapetum	Sevir.5G335400.1.v1.1
+Chr_05:36827345	32/34	upstream_gene_variant	4 MODIFIER	c.-1872T>C		Sevir.5G335800				Sevir.5G335800.1.v1.1
+Chr_05:36783963	45/50	downstream_gene_variant	4 MODIFIER	c.*4090G>A		Sevir.5G335300	AT5G64510.1			Sevir.5G335300.1.v1.1
+Chr_05:38746985	9/9	intergenic_region	4 MODIFIER	n.38746985G>A		Sevir.5G364200				Sevir.5G364100.v1.1-Sevir.5G364200.v1.1
+Chr_05:35633163	2/2	upstream_gene_variant	4 MODIFIER	c.-4111G>T		Sevir.5G318700	AT4G32810.1	ATCCD8,CCD8,MAX4	carotenoid cleavage dioxygenase 8	Sevir.5G318700.1.v1.1
+Chr_05:39589079	31/31	intron_variant	4 MODIFIER	c.0+188C>T		Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.1.v1.1
+Chr_05:39589079	31/31	intron_variant	4 MODIFIER	c.0+188C>T		Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.3.v1.1
+Chr_05:35637079	26/29	intergenic_region	4 MODIFIER	n.35637079T>C		Sevir.5G318800	AT4G04910.1	NSF	AAA-type ATPase family protein	Sevir.5G318700.v1.1-Sevir.5G318800.v1.1
+Chr_05:39589544	23/24	5_prime_UTR_variant	4 MODIFIER	c.-278C>T		Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.1.v1.1
+Chr_05:35637079	26/29	intergenic_region	4 MODIFIER	n.35637079T>C		Sevir.5G318700	AT4G32810.1	ATCCD8,CCD8,MAX4	carotenoid cleavage dioxygenase 8	Sevir.5G318700.v1.1-Sevir.5G318800.v1.1
+Chr_05:39589544	23/24	5_prime_UTR_variant	4 MODIFIER	c.-278C>T		Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.3.v1.1
+Chr_05:35633163	2/2	intergenic_region	4 MODIFIER	n.35633163C>A		Sevir.5G318800	AT4G04910.1	NSF	AAA-type ATPase family protein	Sevir.5G318700.v1.1-Sevir.5G318800.v1.1
+Chr_05:39589544	23/24	intron_variant	4 MODIFIER	c.24-440C>T		Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.2.v1.1
+Chr_05:35633163	2/2	intergenic_region	4 MODIFIER	n.35633163C>A		Sevir.5G318700	AT4G32810.1	ATCCD8,CCD8,MAX4	carotenoid cleavage dioxygenase 8	Sevir.5G318700.v1.1-Sevir.5G318800.v1.1
+Chr_05:39589544	23/24	intron_variant	4 MODIFIER	c.24-440C>T		Sevir.5G376400	AT2G37080.1	RIP3	ROP interactive partner 3	Sevir.5G376400.4.v1.1
+Chr_05:38746985	9/9	intergenic_region	4 MODIFIER	n.38746985G>A		Sevir.5G364100	AT2G35630.1	GEM1,MOR1	ARM repeat superfamily protein	Sevir.5G364100.v1.1-Sevir.5G364200.v1.1
