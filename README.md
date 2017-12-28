@@ -15,7 +15,7 @@ Dependencies:
 - `dash_core_components`
 - `dash_html_components`
 - `dash_table_experiments`
-- `plotly.graph_objs`
+- `plotly`
 - `base64`
 - `re`
 - `urllib`
