@@ -5,11 +5,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dt
 import plotly.graph_objs as go
-import plotly.plotly as py
-import numpy as np
-import sys
 import base64
-#import json
 import re
 import urllib
 
@@ -17,13 +13,13 @@ import commands
 import gzip
 import StringIO
 
-STEP=2
-YMAX=1.1
+STEP=2    # sliding window step size, shoud be > 5
+YMAX=1.1    # plot y axis up limit
 MAXSNP=100000	# max snp allowed, otherwize thin
-MAXFSIZE=10000000
-ColumnOrder=['Pos','Mut/Total','Annotation','Impact','Codon','Allele','Gene','AtLog','AtName','AtAnno','Transcript']
-F_fai='genome/Sviridis_311_v1.0.fa.fai'
-F_anno='genome/Sviridis_311_v1.1.annotation_info.txt'
+MAXFSIZE=10000000    # max file size allowed
+ColumnOrder=['Pos','Mut/Total','EffAnno','Impact','Codon','Allele','Gene','AtLog','AtName','AtAnno','Transcript']   # out table column names
+F_fai='genome/Sviridis_311_v1.0.fa.fai'    # faidx indexed genome size file
+F_anno='genome/Sviridis_311_v1.1.annotation_info.txt'    # gene annotation file, phytozome format
 
 # genome size dic
 f=open(F_fai)
@@ -58,7 +54,7 @@ def readvcf(infile, LOW):
 		if len(ls[4])!=1:   # multiple alternative
 			continue
 		if "AD" not in ls[8]:
-			sys.exit(0) # no AD term, could not be analyzed
+			return ['NoAd'],[] # no AD term, could not be analyzed
 		ch,relpos=ls[0],int(ls[1])
 		abspos=startdic[ch][0]+relpos
 		wt,mut=map(int,ls[9].split(':')[1].split(','))
@@ -74,9 +70,10 @@ def readvcf(infile, LOW):
 		annotation=str(ch)+":"+str(relpos)+'<br>'+str(mut)+'/'+str(mut+wt)+' mut/total allels<br>'+'<br>'.join(eff.split(','))
 		chartcolor=colordic[disruptive%2]
 		chartsize=sizedic[disruptive%2]
-		d.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,chartcolor,chartsize])
 		if disruptive:
 			dd.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,chartcolor,chartsize])
+		else:
+			d.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,chartcolor,chartsize])
 		n+=1
 	d=map(list,zip(*d))
 	dd=map(list,zip(*dd))
@@ -153,6 +150,17 @@ app.layout = html.Div(children=[
 ])
 
 
+
+def bsa_layout(message):
+	return  go.Layout(title=message,
+			yaxis=dict(zeroline=False,title='Derived Allele Frequency', range=(0,YMAX)),
+			xaxis=dict(zeroline=False,title='Genomic position',range=(0,pos)),
+			shapes=[dict(type='rect',x0=startdic[ch][0],x1=startdic[ch][1],y0=0,y1=YMAX,fillcolor=startdic[ch][2], \
+				line=dict(width=0)) for ch in chs],
+			hovermode='closest',
+			) 
+
+
 @app.callback(
 	dash.dependencies.Output('BSA_plot', 'figure'),
 	[
@@ -161,29 +169,22 @@ app.layout = html.Div(children=[
 		dash.dependencies.Input('file_upload', 'contents'),
 		dash.dependencies.Input('file_upload', 'filename'),
 	])
-def update_figure(WIN,LOW,contents,fname):
+def update_bsaplot(WIN,LOW,contents,fname):
 	# file reading
 	if not fname:
 		return go.Figure(   
 				data=[go.Scatter(x=[1],y=[1])], # default figure
-				layout=go.Layout(title='BSA plot server by Pu Huang',
-					yaxis=dict(zeroline=False,title='Derived Allele Frequency', range=(0,YMAX)),
-					xaxis=dict(zeroline=False,title='Genomic position',range=(0,pos)),
-					shapes=[dict(type='rect',x0=startdic[ch][0],x1=startdic[ch][1],y0=0,y1=YMAX,fillcolor=startdic[ch][2], \
-						line=dict(width=0)) for ch in chs],
-					hovermode='closest',
-					)
+				layout=bsa_layout('BSA plot server by Pu Huang')
 		)
 	if fname.endswith('.gz'):
 		tmp=base64.b64decode(contents.split(',')[1])
 		if len(tmp)>MAXFSIZE:
-			return go.Figure(layout=go.Layout(title='Warning, too large file for analysis, consider thinning data'))
+			return go.Figure(layout=bsa_layout('Warning, too large file for analysis, consider thinning data'))
 		infile=gzip.GzipFile(fileobj=StringIO.StringIO(tmp)).read().splitlines()
 	else:
 		infile=base64.b64decode(contents.split(',')[1]).splitlines()
 	if len(infile)>MAXSNP:
-		return go.Figure(layout=go.Layout(title='Warning, too large file for analysis, consider thinning data'))
-	
+		return go.Figure(layout=bsa_layout('Warning, too large file for analysis, consider thinning data'))
 	
 	# base snp plot
 	d, dd = readvcf(infile, LOW/100.)
@@ -193,17 +194,11 @@ def update_figure(WIN,LOW,contents,fname):
 	
 	return go.Figure(
 		data=[
-			go.Scatter(x=dd[3], y=dd[4], name=u'Disruptive SNPs',mode = 'markers', marker=dict(color=dd[9],size=dd[10]),hoverinfo='none'),
 			go.Scatter(x=d[3], y=d[4], name=u'SNPs',mode = 'markers', marker=dict(color=d[9],size=d[10]),text=d[6]),
+			go.Scatter(x=dd[3], y=dd[4], name=u'Disruptive SNPs',mode = 'markers', marker=dict(color=dd[9],size=dd[10]),text=dd[6]),
 			go.Scatter(x=smoothpos, y=smoothfreq, name=u'Smooth line',mode='line', line=dict(color='rgb(255,50,50)'),hoverinfo='none'),
 		],
-		layout=go.Layout(title='BSA plot for "'+fname+'"',
-			yaxis=dict(zeroline=False,title='Derived Allele Frequency', range=(0,YMAX)),
-			xaxis=dict(zeroline=False,title='Genomic position',range=(0,pos)),
-			shapes=[dict(type='rect',x0=startdic[ch][0],x1=startdic[ch][1],y0=0,y1=YMAX,fillcolor=startdic[ch][2], \
-				line=dict(width=0)) for ch in chs],
-			hovermode='closest',
-		)
+		layout=bsa_layout('BSA plot for "'+fname+'"')
 	)
 
 
@@ -212,49 +207,46 @@ def update_figure(WIN,LOW,contents,fname):
 	[
 		dash.dependencies.Input('BSA_plot', 'selectedData'),
 		dash.dependencies.Input('file_upload', 'filename'),
-		#dash.dependencies.Input('BSA_plot', 'selectedData'),
 	])
-def display_selected_data(selectedData,fname):
+def update_selected_SNP_in_table(selectedData,fname):
 	if selectedData==None:
 		return [{}]
-	points=selectedData[u'points']
 	out=[]
-	text=[]
-	for point in points:
-		if point[u'curveNumber']==1:
-			text.append(point[u'text'])
-	if text==[]:
+	points_data=[re.split('<br>',point[u'text']) for point in selectedData[u'points']]
+	if points_data==[]:
 		return [{}]
-	fulltexts=[re.split('<br>',t) for t in text]
 	out=[]
 	effdic={'HIGH':'1 ','MODERATE':'2 ','LOW':'3 ','MODIFIER':'4 '}
-	for snp_entry in fulltexts:
-		for item in snp_entry[3:]:
+	for annotation_entry in points_data:
+		for item in annotation_entry[3:]:   # string line by line
 			'''ColumnOrder=['Pos','Mut/Total','Annotation','Impact','Codon','Allele','Gene','AtLog','AtName','AtAnno','Transcript'] '''
 			dic={}
 			anno=item.replace('(','|').replace(')','|').split('|')
-			# SNPeff new version got different format, be cautious
-			if snp_entry[2]=='OLD':
+			# SNPeff old and new versions got different format, be cautious
+			if annotation_entry[2]=='OLD':
 				if anno[6]:
 					cmd='grep '+anno[6]+' '+F_anno+' |  head -1 | cut -f11-'
 					geneanno=commands.getstatusoutput(cmd)[1].split('\t')
 				else:
 					geneanno=['','','','','']
-				values=[snp_entry[0],snp_entry[1].split()[0],anno[0],effdic[anno[1]]+anno[1],anno[3],anno[4],anno[6],geneanno[0],geneanno[1],geneanno[2],anno[9]]
+				values=[annotation_entry[0],annotation_entry[1].split()[0],anno[0],effdic[anno[1]]
+						+anno[1],anno[3],anno[4],anno[6],geneanno[0],geneanno[1],geneanno[2],anno[9]]
 				dic={ColumnOrder[i]:values[i] for i in xrange(len(ColumnOrder))}
-					
-			elif snp_entry[2]=='NEW':
+				out.append(dic)
+			elif annotation_entry[2]=='NEW':
 				if anno[3]:
 					genes=anno[3].split('-')
 					for gene in genes:
 						cmd='grep '+gene+' '+F_anno+' |  head -1 | cut -f11-'
 						geneanno=commands.getstatusoutput(cmd)[1].split('\t')
-						values=[snp_entry[0],snp_entry[1].split()[0],anno[1],effdic[anno[2]]+anno[2],anno[9],anno[10],gene,geneanno[0],geneanno[1],geneanno[2],anno[6]]
+						values=[annotation_entry[0],annotation_entry[1].split()[0],anno[1],effdic[anno[2]]+anno[2],
+								anno[9],anno[10],gene,geneanno[0],geneanno[1],geneanno[2],anno[6]]
 						dic={ColumnOrder[i]:values[i] for i in xrange(len(ColumnOrder))}
 						out.append(dic)
 				else:
 					geneanno=['','','','','']
-					values=[snp_entry[0],snp_entry[1].split()[0],anno[1],effdic[anno[2]]+anno[2],anno[9],anno[10],anno[3],geneanno[0],geneanno[1],geneanno[2],anno[6]]
+					values=[annotation_entry[0],annotation_entry[1].split()[0],anno[1],effdic[anno[2]]+anno[2],
+							anno[9],anno[10],anno[3],geneanno[0],geneanno[1],geneanno[2],anno[6]]
 					out.append(dic)
 	return out
 
@@ -264,7 +256,6 @@ def display_selected_data(selectedData,fname):
 def update_downloader(contents):
 	if (contents==[{}]):
 		return 'data:text/tsv;charset=utf-8,'+urllib.quote(' ')
-	tsvstring='\n'.join(['\t'.join(ColumnOrder)]+['\t'.join(i.values()) for i in contents])
 	tsvstring='\n'.join(['\t'.join(ColumnOrder)]+['\t'.join([i[c] for c in ColumnOrder]) for i in contents])
 	tsvstring = "data:text/tsv;charset=utf-8," + urllib.quote(tsvstring)
 	return tsvstring

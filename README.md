@@ -9,6 +9,20 @@ Example from [SvAUX1 paper](https://www.nature.com/articles/nplants201754)
 
 ![Dash DataTable](https://github.com/puhuangwustl/BSAplot/blob/master/img/BSAplotExample.gif)
 
+Dependencies:
+
+- `dash`
+- `dash_core_components`
+- `dash_html_components`
+- `dash_table_experiments`
+- `plotly.graph_objs`
+- `base64`
+- `re`
+- `urllib`
+- `commands`
+- `gzip`
+- `StringIO`
+
 
 This utility was developed by Pu Huang
 2017.12
