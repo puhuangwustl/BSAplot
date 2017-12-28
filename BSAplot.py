@@ -39,8 +39,6 @@ f.close()
 
 # data entry from vcf.gz file
 def readvcf(infile, LOW):
-	colordic={0:'rgba(0,70,190,.7)',1:'rgba(255,30,30,1)'}
-	sizedic={0:7,1:10}
 	d,dd=[],[]
 	ch,n=0,0
 	if len(infile)>MAXSNP:
@@ -67,13 +65,12 @@ def readvcf(infile, LOW):
 				eff='OLD,'+item.split('=')[1] # snpEff version old
 			if 'ANN' in item:
 				eff='NEW,'+item.split('=')[1] # snpEff version new
+		hover_text=str(ch)+":"+str(relpos)+'<br>'+str(mut)+'/'+str(mut+wt)+' mut/total allels'
 		annotation=str(ch)+":"+str(relpos)+'<br>'+str(mut)+'/'+str(mut+wt)+' mut/total allels<br>'+'<br>'.join(eff.split(','))
-		chartcolor=colordic[disruptive%2]
-		chartsize=sizedic[disruptive%2]
 		if disruptive:
-			dd.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,chartcolor,chartsize])
+			dd.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,hover_text])
 		else:
-			d.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,chartcolor,chartsize])
+			d.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,hover_text])
 		n+=1
 	d=map(list,zip(*d))
 	dd=map(list,zip(*dd))
@@ -96,7 +93,6 @@ def smoother(d,WIN,STEP):
 
 
 #figure2=go.Figure(
-#	data=[go.Histogram(x=w_depth,histnorm='probability')],
 #	layout=go.Layout(title='Histogram for smoothing window read coverage',
 #		xaxis=dict(title='Window read coverage')
 #		)
@@ -194,9 +190,12 @@ def update_bsaplot(WIN,LOW,contents,fname):
 	
 	return go.Figure(
 		data=[
-			go.Scatter(x=d[3], y=d[4], name=u'SNPs',mode = 'markers', marker=dict(color=d[9],size=d[10]),text=d[6]),
-			go.Scatter(x=dd[3], y=dd[4], name=u'Disruptive SNPs',mode = 'markers', marker=dict(color=dd[9],size=dd[10]),text=dd[6]),
+			go.Scatter(x=d[3], y=d[4], name=u'SNPs',mode = 'markers', 
+				marker=dict(color='rgba(0,70,190,.5)',size=7),customdata=d[6],text=d[9]),
+			go.Scatter(x=dd[3], y=dd[4], name=u'Disruptive SNPs',mode = 'markers', 
+				marker=dict(color='rgba(255,30,30,1)',size=10),customdata=dd[6],text=dd[9]),
 			go.Scatter(x=smoothpos, y=smoothfreq, name=u'Smooth line',mode='line', line=dict(color='rgb(255,50,50)'),hoverinfo='none'),
+		#	go.Histogram(x=w_depth,histnorm='probability'),
 		],
 		layout=bsa_layout('BSA plot for "'+fname+'"')
 	)
@@ -206,13 +205,17 @@ def update_bsaplot(WIN,LOW,contents,fname):
 	dash.dependencies.Output('table', 'rows'),
 	[
 		dash.dependencies.Input('BSA_plot', 'selectedData'),
-		dash.dependencies.Input('file_upload', 'filename'),
+		dash.dependencies.Input('BSA_plot', 'clickData'),
 	])
-def update_selected_SNP_in_table(selectedData,fname):
-	if selectedData==None:
+def update_selected_SNP_in_table(selectedData,clickData):
+	if selectedData==None and clickData==None:
 		return [{}]
+	if selectedData:
+		data=selectedData
+	else:
+		data=clickData
 	out=[]
-	points_data=[re.split('<br>',point[u'text']) for point in selectedData[u'points']]
+	points_data=[re.split('<br>',point[u'customdata']) for point in data[u'points']]
 	if points_data==[]:
 		return [{}]
 	out=[]
