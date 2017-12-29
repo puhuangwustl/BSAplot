@@ -78,18 +78,18 @@ def readvcf(infile, LOW):
 
 def smoother(d,WIN,STEP):
 	n,w_pre=0,0
-	smoothpos,smoothfreq,w_depth=[],[],[]
+	smoothpos,smoothfreq,w_depths=[],[],[]
 	for n in xrange(len(d[0])): 
 		if n-w_pre>=STEP and n>=WIN:
 			w_pos=sum(d[3][n-WIN:n])/WIN
 			w_wt=sum(d[7][n-WIN:n])
 			w_mut=sum(d[8][n-WIN:n])
-			w_depth.append(w_wt+w_mut)
+			w_depths.append(w_wt+w_mut)
 			smoothpos.append(w_pos)
 			smoothfreq.append(w_mut/(w_wt+w_mut+0.0000001))
 			w_pre=n
 		n+=1
-	return smoothpos, smoothfreq
+	return smoothpos, smoothfreq, w_depths
 
 
 #figure2=go.Figure(
@@ -118,11 +118,14 @@ app.layout = html.Div(children=[
 	dcc.Upload(id='file_upload',children=html.Button('Upload .vcf File')),
 	dcc.Graph(id='BSA_plot'),
 	html.Div([
-			html.Label('Low frequency cutoff'),
-			dcc.Slider(id='freq-slider',min=0,max=100,value=25,step=None,marks={str(WIN): str(WIN) for WIN in range(0,100,5)}),
-			dcc.Markdown('_'),
-			html.Label('Sliding window size'),
-			dcc.Slider(id='win-slider',min=5,max=50,value=10,step=None,marks={str(WIN): str(WIN) for WIN in range(5,50)}),
+			html.Div([
+				html.Label('Low frequency cutoff'),
+				dcc.Slider(id='freq-slider',min=0,max=100,value=25,step=None,marks={str(WIN): str(WIN) for WIN in range(0,100,5)}),
+			], className='four columns'),
+			html.Div([
+				html.Label('Sliding window size'),
+				dcc.Slider(id='win-slider',min=5,max=50,value=10,step=None,marks={str(WIN): str(WIN) for WIN in range(5,51,5)}),
+			], className='four columns'),
 		],style={'columnCount': 1}),
 		#dcc.Graph(figure=figure2,id='test hist'),
 	
@@ -149,11 +152,13 @@ app.layout = html.Div(children=[
 
 def bsa_layout(message):
 	return  go.Layout(title=message,
-			yaxis=dict(zeroline=False,title='Derived Allele Frequency', range=(0,YMAX)),
-			xaxis=dict(zeroline=False,title='Genomic position',range=(0,pos)),
+			xaxis=dict(zeroline=False,title='Genomic position',range=(0,pos),domain=[0,1],anchor='x1'),
+			yaxis=dict(zeroline=False,title='Derived Allele Frequency', range=(0,YMAX),domain=[0,1],anchor='y1'),
 			shapes=[dict(type='rect',x0=startdic[ch][0],x1=startdic[ch][1],y0=0,y1=YMAX,fillcolor=startdic[ch][2], \
 				line=dict(width=0)) for ch in chs],
 			hovermode='closest',
+			#xaxis2=dict(domain=[0.8, 1],anchor='x2'),
+			#yaxis2=dict(domain=[0, 1],anchor='y2'),
 			) 
 
 
@@ -186,16 +191,17 @@ def update_bsaplot(WIN,LOW,contents,fname):
 	d, dd = readvcf(infile, LOW/100.)
 
 	# calculate smoothcurve
-	smoothpos, smoothfreq = smoother(d,WIN,STEP)
+	smoothpos, smoothfreq, w_depths = smoother(d,WIN,STEP)
 	
 	return go.Figure(
 		data=[
 			go.Scatter(x=d[3], y=d[4], name=u'SNPs',mode = 'markers', 
-				marker=dict(color='rgba(0,70,190,.5)',size=7),customdata=d[6],text=d[9]),
+				marker=dict(color='rgba(0,70,190,.5)',size=7),customdata=d[6],text=d[9],xaxis='x1',yaxis='y1'),
 			go.Scatter(x=dd[3], y=dd[4], name=u'Disruptive SNPs',mode = 'markers', 
-				marker=dict(color='rgba(255,30,30,1)',size=10),customdata=dd[6],text=dd[9]),
-			go.Scatter(x=smoothpos, y=smoothfreq, name=u'Smooth line',mode='line', line=dict(color='rgb(255,50,50)'),hoverinfo='none'),
-		#	go.Histogram(x=w_depth,histnorm='probability'),
+				marker=dict(color='rgba(255,30,30,1)',size=10),customdata=dd[6],text=dd[9],xaxis='x1',yaxis='y1'),
+			go.Scatter(x=smoothpos, y=smoothfreq, name=u'Smooth line',mode='line', 
+				line=dict(color='rgb(55,200,30)'),hoverinfo='none',xaxis='x1',yaxis='y1'),
+			#go.Histogram(x=w_depths,histnorm='probability' ,xaxis='x2',yaxis='y2',), somehow not working at the moment
 		],
 		layout=bsa_layout('BSA plot for "'+fname+'"')
 	)
@@ -262,6 +268,9 @@ def update_downloader(contents):
 	tsvstring='\n'.join(['\t'.join(ColumnOrder)]+['\t'.join([i[c] for c in ColumnOrder]) for i in contents])
 	tsvstring = "data:text/tsv;charset=utf-8," + urllib.quote(tsvstring)
 	return tsvstring
+
+
+app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'})
 
 if __name__ == '__main__':
 	app.run_server(debug=True, host='0.0.0.0')
