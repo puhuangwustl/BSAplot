@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import dash
 import dash_core_components as dcc
@@ -9,9 +9,9 @@ import base64
 import re
 import urllib
 
-import commands
+import subprocess
 import gzip
-import StringIO
+import io
 
 STEP=2    # sliding window step size, shoud be > 5
 YMAX=1.1    # plot y axis up limit
@@ -27,12 +27,12 @@ chcolordic={0:'rgba(200,255,0,.2)',1:'rgba(50,150,0,.15)'}
 startdic={}
 pos,n,chs=0,0,[]
 for l in f:
-        if l.startswith('scaffold'):
+	if l.startswith('scaffold'):
 		continue
 	ls=l.split()
 	chs.append(ls[0])
-        startdic[ls[0]]=(pos,pos+int(ls[1]),chcolordic[n%2])
-        pos+=int(ls[1])
+	startdic[ls[0]]=(pos,pos+int(ls[1]),chcolordic[n%2])
+	pos+=int(ls[1])
 	n+=1
 f.close()
 
@@ -55,7 +55,7 @@ def readvcf(infile, LOW):
 			return ['NoAd'],[] # no AD term, could not be analyzed
 		ch,relpos=ls[0],int(ls[1])
 		abspos=startdic[ch][0]+relpos
-		wt,mut=map(int,ls[9].split(':')[1].split(','))
+		wt,mut=list(map(int,ls[9].split(':')[1].split(',')))
 		frequency=mut/(wt+mut+0.0000001)
 		if frequency<LOW:
 			continue
@@ -72,14 +72,14 @@ def readvcf(infile, LOW):
 		else:
 			d.append([ch,relpos,relpos,abspos,frequency,disruptive,annotation,wt,mut,hover_text])
 		n+=1
-	d=map(list,zip(*d))
-	dd=map(list,zip(*dd))
+	d=list(map(list,zip(*d)))
+	dd=list(map(list,zip(*dd)))
 	return d,dd
 
 def smoother(d,WIN,STEP):
 	n,w_pre=0,0
 	smoothpos,smoothfreq,w_depths=[],[],[]
-	for n in xrange(len(d[0])): 
+	for n in range(len(d[0])): 
 		if n-w_pre>=STEP and n>=WIN:
 			w_pos=sum(d[3][n-WIN:n])/WIN
 			w_wt=sum(d[7][n-WIN:n])
@@ -174,7 +174,7 @@ def update_bsaplot(WIN,LOW,contents,fname):
 		tmp=base64.b64decode(contents.split(',')[1])
 		if len(tmp)>MAXFSIZE:
 			return go.Figure(layout=bsa_layout('Warning, too large file for analysis, consider thinning data'))
-		infile=gzip.GzipFile(fileobj=StringIO.StringIO(tmp)).read().splitlines()
+		infile=gzip.GzipFile(fileobj=io.BytesIO(tmp)).read().decode().splitlines()
 	else:
 		infile=base64.b64decode(contents.split(',')[1]).splitlines()
 	if len(infile)>MAXSNP:
@@ -228,22 +228,22 @@ def update_selected_SNP_in_table(selectedData,clickData):
 			if annotation_entry[2]=='OLD':
 				if anno[6]:
 					cmd='grep '+anno[6]+' '+F_anno+' |  head -1 | cut -f11-'
-					geneanno=commands.getstatusoutput(cmd)[1].split('\t')
+					geneanno=subprocess.getstatusoutput(cmd)[1].split('\t')
 				else:
 					geneanno=['','','','','']
 				values=[annotation_entry[0],annotation_entry[1].split()[0],anno[0],effdic[anno[1]]
 						+anno[1],anno[3],anno[4],anno[6],geneanno[0],geneanno[1],geneanno[2],anno[9]]
-				dic={ColumnOrder[i]:values[i] for i in xrange(len(ColumnOrder))}
+				dic={ColumnOrder[i]:values[i] for i in range(len(ColumnOrder))}
 				out.append(dic)
 			elif annotation_entry[2]=='NEW':
 				if anno[3]:
 					genes=anno[3].split('-')
 					for gene in genes:
 						cmd='grep '+gene+' '+F_anno+' |  head -1 | cut -f11-'
-						geneanno=commands.getstatusoutput(cmd)[1].split('\t')
+						geneanno=subprocess.getstatusoutput(cmd)[1].split('\t')
 						values=[annotation_entry[0],annotation_entry[1].split()[0],anno[1],effdic[anno[2]]+anno[2],
 								anno[9],anno[10],gene,geneanno[0],geneanno[1],geneanno[2],anno[6]]
-						dic={ColumnOrder[i]:values[i] for i in xrange(len(ColumnOrder))}
+						dic={ColumnOrder[i]:values[i] for i in range(len(ColumnOrder))}
 						out.append(dic)
 				else:
 					geneanno=['','','','','']
@@ -257,16 +257,16 @@ def update_selected_SNP_in_table(selectedData,clickData):
 	[dash.dependencies.Input('table','rows'),])
 def update_downloader(contents):
 	if (contents==[{}]):
-		return 'data:text/tsv;charset=utf-8,'+urllib.quote(' ')
+		return 'data:text/tsv;charset=utf-8,'+urllib.parse.quote(' ')
 	tsvstring='\n'.join(['\t'.join(ColumnOrder)]+['\t'.join([i[c] for c in ColumnOrder]) for i in contents])
-	tsvstring = "data:text/tsv;charset=utf-8," + urllib.quote(tsvstring)
+	tsvstring = "data:text/tsv;charset=utf-8," + urllib.parse.quote(tsvstring)
 	return tsvstring
 
 
 app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'})
-
 app.css.config.serve_locally=True
 app.scripts.config.serve_locally=True
+
 
 if __name__ == '__main__':
 	app.run_server(debug=True, host='0.0.0.0')
